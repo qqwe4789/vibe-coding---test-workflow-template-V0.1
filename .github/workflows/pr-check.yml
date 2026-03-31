@@ -1,0 +1,80 @@
+name: pr-check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR body exists
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        shell: bash
+        run: |
+          if [ -z "$PR_BODY" ]; then
+            echo "PR body is required"
+            exit 1
+          fi
+
+      - name: Validate linked issue
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        shell: bash
+        run: |
+          if echo "$PR_BODY" | grep -Eiq 'closes #[0-9]+'; then
+            echo "Linked issue found"
+          else
+            echo "PR body must include 'Closes #<issue-number>'"
+            exit 1
+          fi
+
+      - name: Validate required sections
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        shell: bash
+        run: |
+          required_sections=("## Summary" "## Linked Issue" "## Validation Evidence" "## Rollback Plan")
+          for section in "${required_sections[@]}"; do
+            if ! echo "$PR_BODY" | grep -Fq "$section"; then
+              echo "Missing section: $section"
+              exit 1
+            fi
+          done
+          echo "All required sections exist"
+
+      - name: Validate template placeholders replaced
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        shell: bash
+        run: |
+          placeholders=(
+            "^- What changed:\\s*$"
+            "^- Why this change:\\s*$"
+            "^- Closes #\\s*$"
+            "^- In scope:\\s*$"
+            "^- Out of scope:\\s*$"
+            "^- Notes / screenshots / logs:\\s*$"
+            "^- Potential impact:\\s*$"
+            "^- Revert method:\\s*$"
+            "^- Fallback / degradation method:\\s*$"
+          )
+
+          for pattern in "${placeholders[@]}"; do
+            if echo "$PR_BODY" | grep -Eq "$pattern"; then
+              echo "PR template contains unfilled placeholder matching: $pattern"
+              exit 1
+            fi
+          done
+
+      - name: Validate validation evidence is meaningful
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        shell: bash
+        run: |
+          checked_count=$(echo "$PR_BODY" | grep -Ec '^- \[x\] ') || true
+          if [ "$checked_count" -lt 1 ]; then
+            echo "At least one validation checkbox must be checked in 'Validation Evidence'"
+            exit 1
+          fi

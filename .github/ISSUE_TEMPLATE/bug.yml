@@ -1,0 +1,42 @@
+name: Bug Report
+description: 提交一个缺陷报告
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题描述
+      description: 当前现象与期望行为
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 可稳定复现的步骤
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围
+      description: 受影响模块、用户群体、严重程度
+    validations:
+      required: true
+
+  - type: textarea
+    id: rootcause
+    attributes:
+      label: 初步根因（可选）
+      description: 若已知可填写
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: 临时止损/回滚方案
+      description: 若无法立即修复，如何先恢复服务
+    validations:
+      required: true

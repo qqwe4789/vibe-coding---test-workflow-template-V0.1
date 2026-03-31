@@ -1,0 +1,35 @@
+name: Engineering Task
+description: 提交一个工程任务（重构、升级、治理等）
+title: "[Task]: "
+labels: ["task"]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: 任务目标
+      description: 任务要达到的明确结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: 交付物
+      description: 代码、文档、配置、脚本等
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: 验证方式
+      description: 如何证明任务完成且无回归
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: 风险与应对
+    validations:
+      required: true
