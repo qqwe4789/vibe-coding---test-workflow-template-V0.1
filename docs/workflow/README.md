@@ -67,3 +67,4 @@
 4. 在 GitHub 仓库设置中为 `main` 开启分支保护，并将 `ci` 与 `pr-check` 设为必需检查。
 5. 如需自动请求评审，更新 `.github/CODEOWNERS` 中的拥有者配置。
 6. 第一次使用时，先用一个小需求完整跑一遍 Issue → 实现 → PR → 合并流程，再决定是否继续增强规则。
+- Bootstrap checks run: 2026-03-31
